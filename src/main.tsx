@@ -1,41 +1,79 @@
-import { StrictMode } from "react"
+import { StrictMode, useCallback, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import DemoOne from "@/components/demo"
+import DottedTrailDemo from "@/components/dotted-trail-demo"
 import OriginalRotatingEarth from "@/components/ui/wireframe-dotted-globe-original"
+import { ideaIndexFromSearch, ideas, nextIdeaIndex } from "@/lib/ideas"
 import "./index.css"
 
 function App() {
-  const isOriginal = new URLSearchParams(window.location.search).get("variant") === "original"
-  const variantSwitch = (
-    <nav aria-label="Вариант глобуса" className="flex gap-1 rounded-full border border-white/15 bg-black p-1 text-xs">
-      <a href="?variant=custom" aria-current={!isOriginal ? "page" : undefined} className={`rounded-full px-3 py-2 ${!isOriginal ? "bg-white text-black" : "text-neutral-500 hover:text-white"}`}>Вариант 1</a>
-      <a href="?variant=original" aria-current={isOriginal ? "page" : undefined} className={`rounded-full px-3 py-2 ${isOriginal ? "bg-white text-black" : "text-neutral-500 hover:text-white"}`}>Оригинал 21st</a>
-    </nav>
-  )
+  const [activeIndex, setActiveIndex] = useState(() => ideaIndexFromSearch(window.location.search))
+  const idea = ideas[activeIndex]
 
-  if (isOriginal) {
-    return (
-      <main className="flex min-h-svh items-center justify-center bg-black p-5 text-white">
-        <div className="fixed right-5 top-5 z-10">{variantSwitch}</div>
-        <OriginalRotatingEarth />
-      </main>
-    )
-  }
+  const navigate = useCallback((direction: number) => {
+    const next = nextIdeaIndex(activeIndex, direction)
+    const url = new URL(window.location.href)
+    url.searchParams.delete("variant")
+    url.searchParams.set("idea", ideas[next].id)
+    window.history.pushState(null, "", url)
+    setActiveIndex(next)
+  }, [activeIndex])
+
+  useEffect(() => {
+    const handlePopState = () => setActiveIndex(ideaIndexFromSearch(window.location.search))
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+      const target = event.target
+      // Preserve arrow-key rotation when the globe canvas is focused.
+      if (target instanceof Element && target.closest("input, textarea, select, canvas, [contenteditable], [role='slider']")) return
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
+      event.preventDefault()
+      navigate(event.key === "ArrowLeft" ? -1 : 1)
+    }
+    window.addEventListener("popstate", handlePopState)
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("popstate", handlePopState)
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [navigate])
+
+  useEffect(() => {
+    document.title = `${idea.title} — Test / ${activeIndex + 1}`
+  }, [idea, activeIndex])
+
+  const arrowClass = `fixed top-1/2 z-30 grid size-11 -translate-y-1/2 place-items-center rounded-full border text-2xl shadow-sm backdrop-blur-md transition-[background-color,transform] hover:scale-105 active:scale-95 sm:size-12 ${idea.light ? "border-black/15 bg-white/75 text-neutral-800 hover:bg-white" : "border-white/20 bg-black/65 text-neutral-200 hover:bg-neutral-900"}`
 
   return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
-      <header className="flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8">
-        <a href="./" className="text-sm font-semibold tracking-[0.28em]" aria-label="Earth — главная">EARTH<span className="text-neutral-600">.</span></a>
-        {variantSwitch}
-      </header>
-      <section className="flex flex-1 flex-col items-center justify-center px-4 pb-8" aria-label="Интерактивная модель Земли">
-        <DemoOne />
-      </section>
-      <footer className="flex items-center justify-between gap-4 border-t border-white/10 px-6 py-5 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-600 sm:px-10">
-        <span>Wireframe & dotted globe</span>
-        <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer" className="transition-colors hover:text-neutral-300">Map data / Natural Earth ↗</a>
-      </footer>
-    </main>
+    <div className={`min-h-svh ${idea.light ? "bg-white text-neutral-900" : "bg-black text-white"}`}>
+      <main key={idea.id} aria-label={idea.label}>
+        {idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
+          <section className="flex min-h-svh items-center justify-center bg-black p-5">
+            <OriginalRotatingEarth />
+          </section>
+        ) : (
+          <section className="flex min-h-svh flex-col bg-background text-foreground">
+            <header className="px-6 py-6 sm:px-10 sm:py-8">
+              <span className="text-sm font-semibold tracking-[0.28em]">EARTH<span className="text-neutral-600">.</span></span>
+            </header>
+            <div className="flex flex-1 items-center justify-center px-4 pb-28"><DemoOne /></div>
+          </section>
+        )}
+      </main>
+
+      <nav aria-label="Переключение идей">
+        <button type="button" onClick={() => navigate(-1)} aria-label={`Предыдущая идея: ${ideas[nextIdeaIndex(activeIndex, -1)].label}`} title="Предыдущая идея (←)" className={`${arrowClass} left-3 sm:left-6`}>←</button>
+        <button type="button" onClick={() => navigate(1)} aria-label={`Следующая идея: ${ideas[nextIdeaIndex(activeIndex, 1)].label}`} title="Следующая идея (→)" className={`${arrowClass} right-3 sm:right-6`}>→</button>
+      </nav>
+
+      <div className={`pointer-events-none fixed inset-x-0 bottom-5 z-20 flex justify-center px-4 ${idea.light ? "text-neutral-800" : "text-neutral-300"}`}>
+        <div className={`flex items-center gap-3 rounded-full border px-5 py-3 text-xs backdrop-blur-md ${idea.light ? "border-black/10 bg-white/80" : "border-white/10 bg-black/80"}`} role="status" aria-live="polite" aria-atomic="true">
+          <span className="font-mono text-[10px] opacity-50">{String(activeIndex + 1).padStart(2, "0")} / {String(ideas.length).padStart(2, "0")}</span>
+          <span className="h-3 w-px bg-current opacity-20" />
+          <span>{idea.label}</span>
+        </div>
+      </div>
+    </div>
   )
 }
 
