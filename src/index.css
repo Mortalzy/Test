@@ -57,3 +57,21 @@ body { font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antial
 button { cursor: pointer; }
 button:disabled { cursor: default; }
 button:focus-visible, canvas:focus-visible, a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+
+/* Scoped to the Pixel Flow Field demo so the existing themes stay intact. */
+.pixel-flow-demo {
+  color-scheme: light;
+  --background: #fafafa;
+  --foreground: oklch(0.22 0 0);
+  --brand: oklch(0.72 0.2 352.53);
+  --brand-light: oklch(0.78 0.15 352.53);
+  --brand-lighter: oklch(0.85 0.1 352.53);
+  --brand-secondary: oklch(0.66 0.21 354.31);
+  --smooth-500: oklch(0.81 0 0);
+  --color-brand: var(--brand);
+  --color-smooth-500: var(--smooth-500);
+}
+.pixel-flow-demo input:focus-visible, .pixel-flow-demo select:focus-visible {
+  outline: 2px solid #be185d;
+  outline-offset: 3px;
+}
