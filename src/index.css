@@ -61,7 +61,7 @@ button:focus-visible, canvas:focus-visible, a:focus-visible { outline: 2px solid
 /* Scoped to the Pixel Flow Field demo so the existing themes stay intact. */
 .pixel-flow-demo {
   color-scheme: light;
-  --background: #fafafa;
+  --background: #000000;
   --foreground: oklch(0.22 0 0);
   --brand: oklch(0.72 0.2 352.53);
   --brand-light: oklch(0.78 0.15 352.53);

@@ -4,7 +4,7 @@ import PixelFlowField, { type PixelFlowFieldShape } from "@/components/ui/pixel-
 const defaults = {
   text: "smooth", shape: "square" as PixelFlowFieldShape, cellSize: 8,
   gap: 3, speed: 1, pointerRadius: 130, pointerStrength: 1, weight: 800,
-  backgroundColor: "#fafafa", fieldColor: "#c1c1c1",
+  backgroundColor: "#000000", fieldColor: "#c1c1c1",
 };
 
 const sliders = [
