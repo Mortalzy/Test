@@ -4,11 +4,12 @@ export const ideas = [
   { id: "trail", title: "Dotted Trail Cursor", label: "Точечный фон · след курсора", light: true },
   { id: "kinetic", title: "Interactive Background", label: "Кинетическая сетка · Interactive Background", light: false },
   { id: "pixel", title: "Pixel Flow Field", label: "Пиксельное поле · Pixel Flow Field", light: true },
+  { id: "frost", title: "First frost", label: "Зимнее окно · Hoarfrost Pane", light: false },
 ] as const
 
 export function ideaIndexFromSearch(search: string): number {
   const params = new URLSearchParams(search)
-  const requested = params.get("idea") ?? params.get("variant") ?? "pixel"
+  const requested = params.get("idea") ?? params.get("variant") ?? "frost"
   const index = ideas.findIndex((idea) => idea.id === requested)
   return index < 0 ? ideas.length - 1 : index
 }
