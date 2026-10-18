@@ -2,6 +2,7 @@ import { StrictMode, useCallback, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import DemoOne from "@/components/demo"
 import DottedTrailDemo from "@/components/dotted-trail-demo"
+import KineticGridDemo from "@/components/kinetic-grid-demo"
 import OriginalRotatingEarth from "@/components/ui/wireframe-dotted-globe-original"
 import { ideaIndexFromSearch, ideas, nextIdeaIndex } from "@/lib/ideas"
 import "./index.css"
@@ -47,7 +48,7 @@ function App() {
   return (
     <div className={`min-h-svh ${idea.light ? "bg-white text-neutral-900" : "bg-black text-white"}`}>
       <main key={idea.id} aria-label={idea.label}>
-        {idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
+        {idea.id === "kinetic" ? <KineticGridDemo /> : idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
           <section className="flex min-h-svh items-center justify-center bg-black p-5">
             <OriginalRotatingEarth />
           </section>
