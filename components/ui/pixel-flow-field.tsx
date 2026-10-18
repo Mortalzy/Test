@@ -20,6 +20,8 @@ export interface PixelFlowFieldProps {
    * property name such as `--color-brand`.
    */
   colors?: string[];
+  /** Colour of cells outside the sampled word/image; leaves glyph colours unchanged. */
+  fieldColor?: string;
   /** Gap between cells in CSS pixels. */
   gap?: number;
   /** Freezes the field on its current frame. */
@@ -54,6 +56,7 @@ type Rgba = [number, number, number, number];
 interface FieldSettings {
   cellSize: number;
   colors: Rgba[];
+  fieldColor: Rgba | null;
   fontFamily: string;
   gap: number;
   pointerRadius: number;
@@ -277,6 +280,7 @@ const createFieldController = (
   let settings: FieldSettings = {
     cellSize: DEFAULT_CELL_SIZE,
     colors: FALLBACK_COLORS,
+    fieldColor: null,
     fontFamily: DEFAULT_FONT_FAMILY,
     gap: DEFAULT_GAP,
     pointerRadius: DEFAULT_POINTER_RADIUS,
@@ -471,15 +475,21 @@ const createFieldController = (
   };
 
   const buildTiers = () => {
-    const buckets: number[][] = Array.from({ length: TIER_COUNT }, () => []);
+    const buckets: number[][] = Array.from({ length: TIER_COUNT + 1 }, () => []);
     for (let i = 0; i < count; i++) {
-      const tier = Math.min(TIER_COUNT - 1, Math.floor(mask[i] * TIER_COUNT));
+      const tier = settings.fieldColor && mask[i] === 0
+        ? TIER_COUNT
+        : Math.min(TIER_COUNT - 1, Math.floor(mask[i] * TIER_COUNT));
       buckets[tier].push(i);
     }
     tiers = buckets.map((bucket) => Int32Array.from(bucket));
-    tierCss = buckets.map((_, tier) =>
-      rampCss((tier + 0.5) / TIER_COUNT, settings.colors),
-    );
+    tierCss = buckets.map((_, tier) => {
+      if (tier === TIER_COUNT && settings.fieldColor) {
+        const [r, g, b, alpha] = settings.fieldColor;
+        return `rgba(${r}, ${g}, ${b}, ${alpha * FIELD_ALPHA})`;
+      }
+      return rampCss((tier + 0.5) / TIER_COUNT, settings.colors);
+    });
   };
 
   const buildGrid = () => {
@@ -843,6 +853,7 @@ const PixelFlowField = ({
   children,
   className,
   colors = DEFAULT_COLORS,
+  fieldColor,
   gap = DEFAULT_GAP,
   paused = false,
   pointerRadius = DEFAULT_POINTER_RADIUS,
@@ -861,6 +872,7 @@ const PixelFlowField = ({
   const [isSupported, setIsSupported] = useState(true);
   const [isActive, setIsActive] = useState(false);
   const [resolvedColors, setResolvedColors] = useState<Rgba[]>(FALLBACK_COLORS);
+  const [resolvedFieldColor, setResolvedFieldColor] = useState<Rgba | null>(null);
   const [fontFamily, setFontFamily] = useState(DEFAULT_FONT_FAMILY);
   const [source, setSource] = useState<HTMLImageElement | null>(null);
 
@@ -872,7 +884,8 @@ const PixelFlowField = ({
       return;
     }
     setResolvedColors(resolveCssColors(colorKey.split("|"), host));
-  }, [colorKey]);
+    setResolvedFieldColor(fieldColor ? resolveCssColors([fieldColor], host)[0] : null);
+  }, [colorKey, fieldColor]);
 
   // The sampled word should be set in the same typeface as the surrounding
   // page, so the family is read off the host instead of being hardcoded.
@@ -976,6 +989,7 @@ const PixelFlowField = ({
     controller.setSettings({
       cellSize: Math.max(cellSize, MIN_STEP),
       colors: resolvedColors,
+      fieldColor: resolvedFieldColor,
       fontFamily,
       gap: Math.max(gap, 0),
       pointerRadius: Math.max(pointerRadius, 1),
@@ -996,6 +1010,7 @@ const PixelFlowField = ({
     pointerRadius,
     pointerStrength,
     resolvedColors,
+    resolvedFieldColor,
     scatter,
     shape,
     shouldReduceMotion,

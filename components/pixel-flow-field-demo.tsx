@@ -4,6 +4,7 @@ import PixelFlowField, { type PixelFlowFieldShape } from "@/components/ui/pixel-
 const defaults = {
   text: "smooth", shape: "square" as PixelFlowFieldShape, cellSize: 8,
   gap: 3, speed: 1, pointerRadius: 130, pointerStrength: 1, weight: 800,
+  backgroundColor: "#fafafa", fieldColor: "#c1c1c1",
 };
 
 const sliders = [
@@ -21,6 +22,8 @@ export default function PixelFlowFieldDemo() {
   const [scatter, setScatter] = useState(0);
   const [open, setOpen] = useState(false);
 
+  const { backgroundColor, ...fieldSettings } = settings;
+
   const reset = () => {
     setSettings({ ...defaults });
     setPaused(false);
@@ -28,8 +31,8 @@ export default function PixelFlowFieldDemo() {
   };
 
   return (
-    <section className="pixel-flow-demo relative h-svh min-h-[320px] w-full overflow-hidden bg-background text-foreground" aria-label="Pixel Flow Field">
-      <PixelFlowField className="h-full w-full" {...settings} paused={paused} scatter={scatter} />
+    <section className="pixel-flow-demo relative h-svh min-h-[320px] w-full overflow-hidden bg-background text-foreground" aria-label="Pixel Flow Field" style={{ backgroundColor }}>
+      <PixelFlowField className="h-full w-full" {...fieldSettings} paused={paused} scatter={scatter} />
 
       <header className="pointer-events-none absolute left-6 top-6 sm:left-10 sm:top-9">
         <h1 className="text-xs font-semibold uppercase tracking-[0.2em]">Pixel Flow Field</h1>
@@ -54,6 +57,15 @@ export default function PixelFlowFieldDemo() {
                 <option value="cross">Крестики</option>
               </select>
             </label>
+            {([
+              { key: "backgroundColor", label: "Цвет фона" },
+              { key: "fieldColor", label: "Цвет фоновых кубиков" },
+            ] as const).map(({ key, label }) => (
+              <label key={key} htmlFor={`pixel-${key}`} className="flex items-center justify-between gap-3 text-xs font-medium">
+                <span>{label}</span>
+                <input id={`pixel-${key}`} type="color" value={settings[key]} onChange={(event) => setSettings({ ...settings, [key]: event.target.value })} className="h-8 w-10 cursor-pointer rounded border border-black/15 bg-transparent p-0.5" />
+              </label>
+            ))}
             {sliders.map(({ key, label, unit, ...range }) => (
               <label key={key} htmlFor={`pixel-${key}`} className="block text-xs font-medium">
                 <span className="flex justify-between gap-2"><span>{label}</span><output htmlFor={`pixel-${key}`} className="font-mono text-neutral-500">{settings[key]}{unit}</output></span>
