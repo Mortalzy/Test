@@ -10,6 +10,7 @@ import OriginalRotatingEarth from "@/components/ui/wireframe-dotted-globe-origin
 import { ideaIndexFromSearch, ideas, nextIdeaIndex } from "@/lib/ideas"
 import "./index.css"
 
+const ClothDemo = lazy(() => import("@/components/cloth-demo"))
 const GravitySandboxDemo = lazy(() => import("@/components/gravity-sandbox-demo"))
 
 function App() {
@@ -53,7 +54,7 @@ function App() {
   return (
     <div className={`min-h-svh ${idea.light ? "bg-white text-neutral-900" : "bg-black text-white"}`}>
       <main key={idea.id} aria-label={idea.label}>
-        {idea.id === "gravity" ? <Suspense fallback={<div className="grid min-h-svh place-items-center text-sm text-neutral-400">Собираем песочницу…</div>}><GravitySandboxDemo /></Suspense> : idea.id === "metal" ? <LiquidMetalDemo /> : idea.id === "frost" ? <HoarfrostPaneDemo /> : idea.id === "pixel" ? <PixelFlowFieldDemo /> : idea.id === "kinetic" ? <KineticGridDemo /> : idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
+        {idea.id === "cloth" ? <Suspense fallback={<div className="grid min-h-svh place-items-center text-sm text-neutral-400">Разворачиваем полотно…</div>}><ClothDemo /></Suspense> : idea.id === "gravity" ? <Suspense fallback={<div className="grid min-h-svh place-items-center text-sm text-neutral-400">Собираем песочницу…</div>}><GravitySandboxDemo /></Suspense> : idea.id === "metal" ? <LiquidMetalDemo /> : idea.id === "frost" ? <HoarfrostPaneDemo /> : idea.id === "pixel" ? <PixelFlowFieldDemo /> : idea.id === "kinetic" ? <KineticGridDemo /> : idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
           <section className="flex min-h-svh items-center justify-center bg-black p-5">
             <OriginalRotatingEarth />
           </section>
