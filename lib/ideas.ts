@@ -6,11 +6,12 @@ export const ideas = [
   { id: "pixel", title: "Pixel Flow Field", label: "Пиксельное поле · Pixel Flow Field", light: true },
   { id: "frost", title: "First frost", label: "Зимнее окно · Hoarfrost Pane", light: false },
   { id: "metal", title: "Liquid Matter", label: "Жидкий металл · Liquid Matter", light: false },
+  { id: "gravity", title: "Gravity Playground", label: "Песочница с гравитацией", light: false },
 ] as const
 
 export function ideaIndexFromSearch(search: string): number {
   const params = new URLSearchParams(search)
-  const requested = params.get("idea") ?? params.get("variant") ?? "metal"
+  const requested = params.get("idea") ?? params.get("variant") ?? "gravity"
   const index = ideas.findIndex((idea) => idea.id === requested)
   return index < 0 ? ideas.length - 1 : index
 }

@@ -1,0 +1,317 @@
+.gs-demo {
+  height: 100svh;
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
+  color: #eeece5;
+  font-family: Arial, sans-serif;
+}
+.gs-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+.gs-header {
+  position: absolute;
+  top: 30px;
+  left: 36px;
+  right: 36px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-size: 15px;
+}
+.gs-header small {
+  font-size: 9px;
+  color: #9397a0;
+  letter-spacing: 0.17em;
+  margin-left: 14px;
+}
+.gs-count {
+  font: 9px monospace;
+  color: #9a9fa9;
+  letter-spacing: 0.12em;
+  margin-right: 350px;
+}
+.gs-title {
+  position: absolute;
+  top: 25%;
+  left: 8%;
+  pointer-events: none;
+  color: #ffffff27;
+}
+.gs-title h1 {
+  font:
+    normal clamp(64px, 8vw, 130px) / 0.95 Georgia,
+    serif;
+  letter-spacing: -0.06em;
+  margin: 24px 0;
+}
+.gs-title h1 em {
+  font-weight: normal;
+}
+.gs-title p:first-child {
+  font: 9px monospace;
+  letter-spacing: 0.25em;
+  color: #ffffff35;
+}
+.gs-title p:last-child {
+  font-size: 12px;
+  color: #ffffff40;
+}
+.gs-toolbar {
+  position: absolute;
+  left: 50%;
+  top: 83px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid #ffffff20;
+  border-radius: 12px;
+  background: #111318e8;
+  backdrop-filter: blur(20px);
+  z-index: 4;
+  white-space: nowrap;
+}
+.gs-toolbar button {
+  border: 0;
+  background: transparent;
+  color: #999fa9;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+.gs-toolbar button span {
+  font-size: 10px;
+  margin-left: 5px;
+}
+.gs-toolbar button[aria-pressed="true"] {
+  background: #ff764322;
+  color: #ff9b70;
+}
+.gs-toolbar i {
+  width: 1px;
+  background: #ffffff18;
+  margin: 6px 3px;
+}
+.gs-controls {
+  position: absolute;
+  z-index: 25;
+  top: 21px;
+  right: 84px;
+  width: 275px;
+}
+.gs-toggle {
+  display: block;
+  margin-left: auto;
+  background: #17191eea;
+  color: #eee;
+  border: 1px solid #ffffff24;
+  border-radius: 8px;
+  padding: 13px 17px;
+  font-size: 11px;
+  backdrop-filter: blur(20px);
+}
+.gs-toggle span {
+  margin-left: 20px;
+  color: #999;
+}
+.gs-panel {
+  margin-top: 10px;
+  max-height: calc(100svh - 195px);
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid #ffffff24;
+  border-radius: 12px;
+  background: #13151aef;
+  backdrop-filter: blur(24px);
+  scrollbar-width: thin;
+}
+.gs-panel-heading {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+.gs-panel-heading span {
+  font: 7px monospace;
+  color: #8d939f;
+  letter-spacing: 0.08em;
+}
+.gs-range {
+  display: block;
+  font-size: 10px;
+  color: #c6c8d0;
+  margin: 18px 0;
+}
+.gs-range > span {
+  display: flex;
+  justify-content: space-between;
+}
+.gs-range output {
+  font: 10px monospace;
+  color: #9ca2af;
+}
+.gs-range input {
+  display: block;
+  width: 100%;
+  height: 3px;
+  margin: 13px 0 0;
+  accent-color: #ff9869;
+  cursor: ew-resize;
+}
+.gs-panel hr {
+  border: 0;
+  height: 1px;
+  background: #ffffff16;
+  margin: 22px 0;
+}
+.gs-select {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #c6c8d0;
+  margin-top: 16px;
+}
+.gs-select select {
+  background: #24272e;
+  color: #ddd;
+  border: 1px solid #ffffff20;
+  border-radius: 4px;
+  padding: 7px;
+  font-size: 10px;
+}
+.gs-select input {
+  width: 40px;
+  height: 27px;
+  border: 1px solid #ffffff30;
+  border-radius: 4px;
+  padding: 2px;
+  background: none;
+}
+.gs-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 24px;
+}
+.gs-actions button {
+  color: #ddd;
+  border: 1px solid #ffffff25;
+  border-radius: 6px;
+  background: #ffffff06;
+  padding: 11px 3px;
+  font-size: 10px;
+}
+.gs-actions button:disabled {
+  opacity: 0.35;
+}
+.gs-demo button:hover:not(:disabled) {
+  background-color: #ffffff12;
+  color: #fff;
+}
+.gs-hint {
+  position: absolute;
+  bottom: 78px;
+  left: 50px;
+  right: 50px;
+  text-align: center;
+  font: 10px monospace;
+  color: #a3a8b0;
+  pointer-events: none;
+}
+.gs-error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background: #25252a;
+  border-radius: 12px;
+}
+.gs-demo input:focus-visible,
+.gs-demo select:focus-visible {
+  outline: 2px solid #ff9869;
+  outline-offset: 4px;
+}
+@media (max-width: 1000px) {
+  .gs-controls {
+    right: 20px;
+  }
+  .gs-count {
+    display: none;
+  }
+  .gs-title {
+    left: 65px;
+  }
+  .gs-toolbar {
+    top: 85px;
+  }
+}
+@media (max-width: 640px) {
+  .gs-demo {
+    min-height: 460px;
+  }
+  .gs-header {
+    top: 28px;
+    left: 20px;
+  }
+  .gs-header small {
+    display: none;
+  }
+  .gs-controls {
+    top: 17px;
+    right: 15px;
+    width: min(275px, calc(100vw - 30px));
+  }
+  .gs-toggle {
+    padding: 10px 13px;
+  }
+  .gs-panel {
+    max-height: calc(100svh - 190px);
+    padding: 18px;
+  }
+  .gs-toolbar {
+    top: 76px;
+    width: calc(100% - 32px);
+    justify-content: center;
+    box-sizing: border-box;
+    gap: 0;
+    padding: 5px;
+  }
+  .gs-toolbar button {
+    padding: 9px 7px;
+  }
+  .gs-toolbar button span {
+    font-size: 9px;
+    margin-left: 3px;
+  }
+  .gs-toolbar button:last-child span {
+    display: none;
+  }
+  .gs-title {
+    left: 55px;
+    top: 29%;
+  }
+  .gs-title h1 {
+    font-size: 70px;
+  }
+  .gs-title p:last-child {
+    font-size: 10px;
+    max-width: 220px;
+  }
+  .gs-hint {
+    font-size: 9px;
+    bottom: 78px;
+    line-height: 1.6;
+  }
+}

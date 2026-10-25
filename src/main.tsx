@@ -1,4 +1,4 @@
-import { StrictMode, useCallback, useEffect, useState } from "react"
+import { StrictMode, Suspense, lazy, useCallback, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import DemoOne from "@/components/demo"
 import DottedTrailDemo from "@/components/dotted-trail-demo"
@@ -9,6 +9,8 @@ import HoarfrostPaneDemo from "@/components/hoarfrost-pane-demo"
 import OriginalRotatingEarth from "@/components/ui/wireframe-dotted-globe-original"
 import { ideaIndexFromSearch, ideas, nextIdeaIndex } from "@/lib/ideas"
 import "./index.css"
+
+const GravitySandboxDemo = lazy(() => import("@/components/gravity-sandbox-demo"))
 
 function App() {
   const [activeIndex, setActiveIndex] = useState(() => ideaIndexFromSearch(window.location.search))
@@ -51,7 +53,7 @@ function App() {
   return (
     <div className={`min-h-svh ${idea.light ? "bg-white text-neutral-900" : "bg-black text-white"}`}>
       <main key={idea.id} aria-label={idea.label}>
-        {idea.id === "metal" ? <LiquidMetalDemo /> : idea.id === "frost" ? <HoarfrostPaneDemo /> : idea.id === "pixel" ? <PixelFlowFieldDemo /> : idea.id === "kinetic" ? <KineticGridDemo /> : idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
+        {idea.id === "gravity" ? <Suspense fallback={<div className="grid min-h-svh place-items-center text-sm text-neutral-400">Собираем песочницу…</div>}><GravitySandboxDemo /></Suspense> : idea.id === "metal" ? <LiquidMetalDemo /> : idea.id === "frost" ? <HoarfrostPaneDemo /> : idea.id === "pixel" ? <PixelFlowFieldDemo /> : idea.id === "kinetic" ? <KineticGridDemo /> : idea.id === "trail" ? <DottedTrailDemo /> : idea.id === "original" ? (
           <section className="flex min-h-svh items-center justify-center bg-black p-5">
             <OriginalRotatingEarth />
           </section>
